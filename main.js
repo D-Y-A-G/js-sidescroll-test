@@ -233,7 +233,7 @@ window.addEventListener("load", function () {
       this.width = 160;
       this.height = 800; // changes enemy height position on canvas
       this.image = document.getElementById("enemyImage");
-      this.x = this.gameWidth; // default this.gameWidth - 100
+      this.x = this.gameWidth + 500; // default this.gameWidth - 100
       this.y = this.gameHeight - this.height;
       this.frameX = 0;
       this.maxFrame = 5;
