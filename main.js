@@ -12,6 +12,7 @@ window.addEventListener("load", function () {
     constructor() {
       this.keys = [];
       this.touchY = "";
+      // this.touchX = "";
       this.touchThreshold = 30; // determines the length of swipe to perform action
       window.addEventListener("keydown", (e) => {
         // console.log(e.key);
@@ -41,14 +42,21 @@ window.addEventListener("load", function () {
       });
       window.addEventListener("touchstart", (e) => {
         this.touchY = e.changedTouches[0].pageY;
+        // this.touchX = e.changedTouches[0].pageX;
       });
       window.addEventListener("touchmove", (e) => {
         const swipeDistance = e.changedTouches[0].pageY - this.touchY;
+        const swipeSide = e.changedTouches[0].pageX - this.touchX;
         if (
           swipeDistance < -this.touchThreshold &&
           this.keys.indexOf("swipe up") === -1
         )
           this.keys.push("swipe up");
+        // else if (
+        //   swipeSide < -this.touchThreshold &&
+        //   this.keys.indexOf("swipe side") === -1
+        // )
+        //   this.keys.push("swipe side");
         else if (
           swipeDistance > this.touchThreshold &&
           this.keys.indexOf("swipe down") === -1
@@ -107,16 +115,6 @@ window.addEventListener("load", function () {
 
       /*  hit box start
 
-      context.strokeStyle = "white";
-      context.strokeRect(this.x, this.y, this.width, this.height);
-      context.beginPath();
-      context.arc(
-        this.x + this.width / 2,
-        this.y + this.height / 2,
-        this.width / 2,
-        0,
-        Math.PI * 2
-      );
       context.stroke();
       context.strokeStyle = "red";
       context.beginPath();
@@ -205,7 +203,7 @@ window.addEventListener("load", function () {
       this.y = 0;
       this.width = 2400;
       this.height = 720;
-      this.speed = 4;
+      this.speed = 6;
     }
     draw(context) {
       context.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -240,21 +238,12 @@ window.addEventListener("load", function () {
       this.fps = 20; // enemy sprite fps
       this.frameTimer = 0;
       this.frameInterval = 800 / this.fps;
-      this.speed = 3;
+      this.speed = 6;
       this.markedForDeletion = false;
     }
     draw(context) {
       /* hit box start
-      context.strokeStyle = "white";
-      context.strokeRect(this.x, this.y, this.width, this.height);
-      context.beginPath();
-      context.arc(
-        this.x + this.width / 2,
-        this.y + this.height / 2,
-        this.width / 2,
-        0,
-        Math.PI * 2
-      );
+     
       context.stroke();
       context.strokeStyle = "red";
       context.beginPath();
@@ -307,7 +296,7 @@ window.addEventListener("load", function () {
     if (enemyTimer > enemyInterval + randomEnemyInterval) {
       enemies.push(new Enemy(canvas.width, canvas.height));
       // console.log(enemies)
-      randomEnemyInterval = Math.random() * 1000 + 500;
+      randomEnemyInterval = Math.random() * 1000 + 1000;
       enemyTimer = 0;
     } else {
       enemyTimer += deltaTime;
