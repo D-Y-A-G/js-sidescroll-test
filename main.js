@@ -1,8 +1,8 @@
 window.addEventListener("load", function () {
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
-  canvas.width = 1400; //800 default
-  canvas.height = 720;
+  canvas.width = 1920; //800 default this can change based on bg img attributes
+  canvas.height = 1000;
   let enemies = [];
   let score = 0;
   let gameOver = false;
@@ -67,7 +67,7 @@ window.addEventListener("load", function () {
 
   class Player {
     constructor(gameWidth, gameHeight) {
-      this.gameHeight = gameHeight;
+      this.gameHeight = gameHeight - 20;
       this.gameWidth = gameWidth;
       this.width = 200;
       this.height = 200;
@@ -77,9 +77,9 @@ window.addEventListener("load", function () {
       this.frameX = 0;
       this.maxFrame = 8;
       this.frameY = 0;
-      this.fps = 20; // enemy sprite fps
+      this.fps = 30; // player sprite fps
       this.frameTimer = 0;
-      this.frameInterval = 900 / this.fps; // 1000 original
+      this.frameInterval = 1000 / this.fps; // 1000 original
       this.speed = 0;
       this.vy = 0;
       this.weight = 1;
@@ -142,7 +142,7 @@ window.addEventListener("load", function () {
       enemies.forEach((enemy) => {
         const dx = enemy.x + enemy.width / 2 - 20 - (this.x + this.width / 2);
         const dy =
-          enemy.y + enemy.height / 2 - 300 - (this.y + this.height / 2);
+          enemy.y + enemy.height / 2 - 400 - (this.y + this.height / 2);
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < enemy.width / 2 + this.width / 3) {
           gameOver = true;
@@ -160,15 +160,15 @@ window.addEventListener("load", function () {
       // Controls
 
       if (input.keys.indexOf("ArrowRight") > -1) {
-        this.speed = 5;
+        this.speed = 7;
       } else if (input.keys.indexOf("ArrowLeft") > -1) {
-        this.speed = -5;
+        this.speed = -6;
       } else if (
         (input.keys.indexOf("ArrowUp") > -1 ||
           input.keys.indexOf("swipe up") > -1) &&
         this.onGround()
       ) {
-        this.vy -= 32;
+        this.vy -= 38;
       } else {
         this.speed = 0;
       }
@@ -203,9 +203,9 @@ window.addEventListener("load", function () {
       this.image = document.getElementById("backgroundImage");
       this.x = 0;
       this.y = 0;
-      this.width = 2400;
-      this.height = 720;
-      this.speed = 4;
+      this.width = 1920; //2400
+      this.height = 1080; //720
+      this.speed = 3;
     }
     draw(context) {
       context.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -231,16 +231,16 @@ window.addEventListener("load", function () {
       this.gameWidth = gameWidth;
       this.gameHeight = gameHeight;
       this.width = 160;
-      this.height = 800; // changes enemy height position on canvas
+      this.height = 1055; // changes enemy height position on canvas
       this.image = document.getElementById("enemyImage");
       this.x = this.gameWidth + 500; // default this.gameWidth - 100
       this.y = this.gameHeight - this.height;
       this.frameX = 0;
       this.maxFrame = 5;
-      this.fps = 20; // enemy sprite fps
+      this.fps = 30; // enemy sprite fps
       this.frameTimer = 0;
       this.frameInterval = 800 / this.fps;
-      this.speed = 3;
+      this.speed = 4;
       this.markedForDeletion = false;
     }
     draw(context) {
