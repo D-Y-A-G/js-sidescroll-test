@@ -2,11 +2,78 @@ window.addEventListener("load", function () {
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
   canvas.width = 1920; //800 default this can change based on bg img attributes
-  canvas.height = 1000;
+  canvas.height = 700; //1000
   let enemies = [];
   let score = 0;
   let gameOver = false;
   const fullScreen = document.getElementById("fullScreenButton");
+  let gameSpeed = 4;
+
+  //// new code ///
+
+  const backgroundLayer1 = new Image();
+  backgroundLayer1.src = "./assets/bg/1.png";
+  const backgroundLayer2 = new Image();
+  backgroundLayer2.src = "./assets/bg/2.png";
+  const backgroundLayer3 = new Image();
+  backgroundLayer3.src = "./assets/bg/3.png";
+  const backgroundLayer4 = new Image();
+  backgroundLayer4.src = "./assets/bg/4.png";
+  const backgroundLayer5 = new Image();
+  backgroundLayer5.src = "./assets/bg/5.png";
+  const backgroundLayer6 = new Image();
+  backgroundLayer6.src = "./assets/bg/6.png";
+  const backgroundLayer7 = new Image();
+  backgroundLayer7.src = "./assets/bg/7.png";
+
+  class Layer {
+    constructor(image, speedModifier) {
+      this.x = 0;
+      this.y = 0;
+      this.width = 2400;
+      this.height = 700;
+      // this.x2 = this.width;
+      this.image = image;
+      this.speedModifier = speedModifier;
+      this.speed = gameSpeed * this.speedModifier;
+    }
+    update() {
+      this.speed = gameSpeed * this.speedModifier; // different speeds for each bg image
+      if (this.x <= -this.width) {
+        this.x = 0; //this.x = this.width + this.x - this.speed;
+      }
+      // if (this.x2 <= -this.width) {
+      //   this.x2 = this.width + this.x2 - this.speed;
+      // }
+      this.x = this.x - this.speed; //Math.floor(this.x - this.speed);
+      // this.x2 = Math.floor(this.x2 - this.speed);
+      // this.x = (gameFrame * this.speed) % this.width;
+    }
+    draw() {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      ctx.drawImage(
+        this.image,
+        this.x + this.width,
+        this.y,
+        this.width,
+        this.height
+      );
+    }
+    restart() {
+      this.x = 0;
+    }
+  }
+  const layer1 = new Layer(backgroundLayer1, 0.1);
+  const layer2 = new Layer(backgroundLayer2, 0.2);
+  const layer3 = new Layer(backgroundLayer3, 0.4);
+  const layer4 = new Layer(backgroundLayer4, 0.25);
+  const layer5 = new Layer(backgroundLayer5, 0.5);
+  const layer6 = new Layer(backgroundLayer6, 0.25);
+  const layer7 = new Layer(backgroundLayer7, 0.5);
+
+  const gameObject = [layer1, layer2, layer3, layer4, layer5, layer6, layer7];
+
+  /// new code ///
 
   class InputHandler {
     constructor() {
@@ -83,7 +150,7 @@ window.addEventListener("load", function () {
       this.y = this.gameHeight - this.height;
       this.image = document.getElementById("playerImage");
       this.frameX = 0;
-      this.maxFrame = 8;
+      this.maxFrame = 8; //8
       this.frameY = 0;
       this.fps = 30; // player sprite fps
       this.frameTimer = 0;
@@ -95,7 +162,7 @@ window.addEventListener("load", function () {
     restart() {
       this.x = 100;
       this.y = this.gameHeight - this.height;
-      this.maxFrame = 8;
+      this.maxFrame = 8; //8
       this.frameY = 0;
     }
     draw(context) {
@@ -140,7 +207,7 @@ window.addEventListener("load", function () {
       enemies.forEach((enemy) => {
         const dx = enemy.x + enemy.width / 2 - 20 - (this.x + this.width / 2);
         const dy =
-          enemy.y + enemy.height / 2 - 400 - (this.y + this.height / 2);
+          enemy.y + enemy.height / 2 - 550 - (this.y + this.height / 2);
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance < enemy.width / 2 + this.width / 3) {
           gameOver = true;
@@ -166,7 +233,7 @@ window.addEventListener("load", function () {
           input.keys.indexOf("swipe up") > -1) &&
         this.onGround()
       ) {
-        this.vy -= 38;
+        this.vy -= 32;
       } else {
         this.speed = 0;
       }
@@ -179,7 +246,7 @@ window.addEventListener("load", function () {
       this.y += this.vy;
       if (!this.onGround()) {
         this.vy += this.weight;
-        this.maxFrame = 5;
+        this.maxFrame = 5; //5
         this.frameY = 1;
       } else {
         this.vy = 0;
@@ -194,48 +261,50 @@ window.addEventListener("load", function () {
     }
   }
 
-  class Background {
-    constructor(gameWidth, gameHeight) {
-      this.gameWidth = gameWidth;
-      this.gameHeight = gameHeight;
-      this.image = document.getElementById("backgroundImage");
-      this.x = 0;
-      this.y = 0;
-      this.width = 1920; //2400
-      this.height = 1080; //720
-      this.speed = 5;
-    }
-    draw(context) {
-      context.drawImage(this.image, this.x, this.y, this.width, this.height);
-      context.drawImage(
-        this.image,
-        this.x + this.width - this.speed, // helps eliminate gaps in images and any break when images reset
-        this.y,
-        this.width,
-        this.height
-      );
-    }
-    update() {
-      this.x -= this.speed;
-      if (this.x < 0 - this.width) this.x = 0;
-    }
-    restart() {
-      this.x = 0;
-    }
-  }
+  // background original code //
+  // class Background {
+  //   constructor(gameWidth, gameHeight) {
+  //     this.gameWidth = gameWidth;
+  //     this.gameHeight = gameHeight;
+  //     this.image = document.getElementById("backgroundImage");
+  //     this.x = 0;
+  //     this.y = 0;
+  //     this.width = 1920; //2400
+  //     this.height = 1080; //720
+  //     this.speed = 5;
+  //   }
+  //   draw(context) {
+  //     context.drawImage(this.image, this.x, this.y, this.width, this.height);
+  //     context.drawImage(
+  //       this.image,
+  //       this.x + this.width - this.speed, // helps eliminate gaps in images and any break when images reset
+  //       this.y,
+  //       this.width,
+  //       this.height
+  //     );
+  //   }
+  //   update() {
+  //     this.x -= this.speed;
+  //     if (this.x < 0 - this.width) this.x = 0;
+  //   }
+  //   restart() {
+  //     this.x = 0;
+  //   }
+  // }
 
+  ////////////////////////////////////////////////////
   class Enemy {
     constructor(gameHeight, gameWidth) {
       this.gameWidth = gameWidth;
       this.gameHeight = gameHeight;
       this.width = 160;
-      this.height = 1055; // changes enemy height position on canvas
+      this.height = 1355; // changes enemy height position on canvas
       this.image = document.getElementById("enemyImage");
-      this.x = this.gameWidth + 500; // default this.gameWidth - 100
+      this.x = this.gameWidth + 1100; // default this.gameWidth - 100
       this.y = this.gameHeight - this.height;
       this.frameX = 0;
       this.maxFrame = 5;
-      this.fps = 30; // enemy sprite fps
+      this.fps = 10; // enemy sprite fps
       this.frameTimer = 0;
       this.frameInterval = 800 / this.fps;
       this.speed = 6;
@@ -336,7 +405,7 @@ window.addEventListener("load", function () {
 
   function restartGame() {
     player.restart();
-    background.restart();
+    layer.restart();
     enemies = [];
     score = 0;
     gameOver = false;
@@ -355,7 +424,8 @@ window.addEventListener("load", function () {
 
   const input = new InputHandler();
   const player = new Player(canvas.width, canvas.height);
-  const background = new Background(canvas.width, canvas.height);
+  // const background = new Background(canvas.width, canvas.height);
+  const layer = new Layer(canvas.width, canvas.height);
 
   let lastTime = 0;
   let enemyTimer = 0;
@@ -366,8 +436,12 @@ window.addEventListener("load", function () {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    background.draw(ctx);
-    background.update();
+    gameObject.forEach((object) => {
+      object.update();
+      object.draw();
+    });
+    // background.draw(ctx);
+    // background.update();
     player.draw(ctx);
     player.update(input, deltaTime, enemies);
     handleEnemies(deltaTime);
